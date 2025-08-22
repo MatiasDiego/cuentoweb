@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un viaje estelar</title>
+    <style>
+        :root {
+            /* --font-titulo: 'Lilita One', cursive; */
+            /* --font-titulo: 'Chewy', system-ui; */
+            --font-cuerpo: 'Patrick Hand', cursive;
+        }
+
+        body {
+            background-color: #1a2340;
+            font-family: var(--font-cuerpo);
+            color: #4a3c30;
+            display: grid;
+            place-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background-image: radial-gradient(white, rgba(255, 255, 255, .2) 2px, transparent 40px), radial-gradient(white, rgba(255, 255, 255, .15) 1px, transparent 30px), radial-gradient(rgba(255, 215, 0, .3), rgba(255, 215, 0, .05) 2px, transparent 30px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: estrellas 200s linear infinite;
+        }
+
+        @keyframes estrellas {
+            from {
+                background-position: 0 0, 40px 60px, 130px 270px;
+            }
+
+            to {
+                background-position: -550px -550px, -390px -610px, -480px -820px;
+            }
+        }
+
+        .libro-container {
+            position: relative;
+            perspective: 1500px;
+            transition: transform 0.4s ease;
+        }
+
+        .libro {
+            width: 900px;
+            height: 700px;
+            position: relative;
+            display: flex;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .pagina {
+            width: 450px;
+            height: 700px;
+            background-color: #fdf9f3;
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            box-sizing: border-box;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        @media (max-width: 920px) {
+            .libro-container {
+                transform: scale(0.65);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .libro-container {
+                transform: scale(0.45);
+            }
+        }
+
+        @media (max-height: 720px) {
+            .libro-container {
+                transform: scale(0.75);
+            }
+        }
+
+        @media (max-width: 920px) and (max-height: 720px) {
+            .libro-container {
+                transform: scale(0.5);
+            }
+        }
+
+        .pagina-izquierda {
+            border-right: 1px solid #d1c8b8;
+            box-shadow: inset 8px 0 15px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .pagina-derecha {
+            border-left: 1px solid #d1c8b8;
+            box-shadow: inset -8px 0 15px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .pagina::after {
+            content: attr(data-page);
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 1.2em;
+            color: #bcaaa4;
+        }
+
+        .pagina-ilustrada {
+            background-size: cover;
+            background-position: center;
+            padding: 50px;
+            justify-content: flex-end;
+        }
+
+        .pagina-ilustrada .parrafo p {
+            color: #fdf9f3;
+            text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.9);
+            font-size: 1.8em;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .pagina-ilustrada .parrafo p:first-of-type::first-letter {
+            all: unset;
+        }
+
+        .pagina-ilustrada::after {
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+            font-size: 1.2em;
+        }
+
+        h1,
+        h2,
+        .restart-btn {
+            font-family: var(--font-titulo);
+            text-align: center;
+        }
+
+        .portada {
+            justify-content: space-between;
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
+
+        .portada h1 {
+            font-size: 4em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #ffde7d;
+            -webkit-text-stroke: 2px #c26c1c;
+            text-shadow: 4px 4px 0px #8c4709;
+        }
+
+        .portada h2 {
+            font-size: 1.8em;
+            font-style: normal;
+            font-weight: normal;
+            color: #f0f8ff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .parrafo p {
+            line-height: 1.6;
+            font-size: 1.5em;
+            text-align: left;
+            margin: 1em 0;
+        }
+
+        .letra-capital::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5em;
+            float: left;
+            line-height: 0.8;
+            padding-right: 10px;
+            padding-top: 5px;
+            color: #ffd36b;
+            text-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+        }
+
+        .hoja {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .hoja.activa {
+            display: flex;
+        }
+
+        .hoja[data-hoja="0"] .pagina-izquierda {
+            display: none;
+        }
+
+        .hoja[data-hoja="0"] .pagina-derecha {
+            width: 450px;
+            margin-left: 450px;
+        }
+
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 10px;
+            z-index: 10;
+            text-shadow: 0 0 5px white;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        #prev-btn {
+            left: 2vw;
+        }
+
+        #next-btn {
+            right: 2vw;
+        }
+
+        .restart-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffd36b;
+            color: #4a3c30;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            /* Se elimina el borde para un look más limpio sobre transparente */
+            border: none;
+        }
+
+        .restart-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* --- ! NUEVA CLASE PARA PÁGINA TRANSPARENTE ! --- */
+        .pagina-transparente {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .pagina-transparente::after {
+            content: none !important; /* Oculta el número de página */
+        }
+    </style>
+</head>
+
+<body>
+    <button id="prev-btn" class="nav-btn">‹</button>
+    <div class="libro-container">
+        <div class="libro">
+
+            <!-- HOJA 0: Portada -->
+            <div class="hoja activa" data-hoja="0">
+                <div class="pagina pagina-izquierda"></div>
+                <div class="pagina pagina-derecha portada pagina-ilustrada" data-page="1"
+                    style="background-image: url('Tapa.png');">
+                </div>
+            </div>
+
+            <!-- HOJA 1: Páginas 2 y 3 -->
+            <div class="hoja" data-hoja="1">
+                <div class="pagina pagina-izquierda" data-page="2">
+                    <div class="parrafo">
+                        <p class="letra-capital">Había una vez, en un bosque suave como el algodón, un conejito marrón llamado Lumi. Tenía
+                            ojos brillantes, orejitas largas y un suéter amarillo que le daba calorcito y mucha
+                            valentía.</p>
+                        <p>Por las noches, cuando todo se quedaba en silencio, Lumi veía cómo las estrellas parpadeaban,
+                            una por una.</p>
+                    </div>
+                </div>
+                <div class="pagina pagina-derecha pagina-ilustrada" data-page="3"
+                    style="background-image: url('Escena_1.png');">
+                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                        <p>—¿Qué se sentirá estar allá arriba? —preguntaba Lumi, con voz suave.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- HOJA 2: Páginas 4 y 5 -->
+            <div class="hoja" data-hoja="2">
+                <div class="pagina pagina-izquierda pagina-ilustrada" data-page="4"
+                    style="background-image: url('Escena_2.png');">
+                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                        <p>Una pequeña ardilla, con una nuez en la mano, se acercó una noche.</p>
+                        <p>— ¿Por qué miras tanto el cielo, Lumi?</p>
+                    </div>
+                </div>
+                <div class="pagina pagina-derecha pagina-ilustrada" data-page="5"
+                    style="background-image: url('Escena_3.png');">
+                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                        <p>— Porque quiero ser... ¡astronauta! —dijo él, con una sonrisa grande.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- HOJA 3: Páginas 6 y 7 -->
+            <div class="hoja" data-hoja="3">
+                <div class="pagina pagina-izquierda" data-page="6">
+                    <div class="parrafo">
+                        <p class="letra-capital">¿Astronauta? —rió la ardilla— ¡Pero no hay cohetes en el bosque!</p>
+                        <p>—No importa —dijo Lumi—. Construiré uno.</p>
+                    </div>
+                </div>
+                <div class="pagina pagina-derecha pagina-ilustrada" data-page="7"
+                    style="background-image: url('Escena_4.png');">
+                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                        <p>Entonces, con ramitas, hojas y una zanahoria, construyó su cohete.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- HOJA 4: Páginas 8 y 9 -->
+            <div class="hoja" data-hoja="4">
+                <div class="pagina pagina-izquierda pagina-ilustrada" data-page="8"
+                    style="background-image: url('Escena_5.png');">
+                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                        <p>Y aunque sus patitas no dejaron el suelo, Lumi cerró los ojos... y voló en su sueño.</p>
+                    </div>
+                </div>
+                <div class="pagina pagina-derecha pagina-ilustrada" data-page="9"
+                    style="background-image: url('Escena_6.png');">
+                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                        <p>Voló entre estrellas brillantes y saludó a la Luna, que lo miraba con una hermosa sonrisa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- HOJA 5: Páginas 10 y 11 -->
+            <div class="hoja" data-hoja="5">
+                <div class="pagina pagina-izquierda" data-page="10">
+                    <div class="parrafo">
+                        <p class="letra-capital">Cuando comenzó a hacerse de día, Lumi comenzó a despertarse.</p>
+                    </div>
+                </div>
+                <div class="pagina pagina-derecha pagina-ilustrada" data-page="11"
+                    style="background-image: url('Escena_7.png');">
+                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                        <p>—Hoy no volé de verdad —dijo Lumi—. Pero en mis sueños, sí.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- HOJA 6: Páginas 12 y 13 -->
+            <div class="hoja" data-hoja="6">
+                <div class="pagina pagina-izquierda pagina-ilustrada" data-page="12"
+                    style="background-image: url('Escena_8.png');">
+                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                        <p>Y la ardilla, ahora con los ojos brillantes, susurró:</p>
+                        <p>—Tal vez... yo también pueda soñar con volar.</p>
+                    </div>
+                </div>
+                <div class="pagina pagina-derecha" data-page="13">
+                    <div class="parrafo">
+                        <p class="letra-capital">Y así, cada noche, Lumi miraba al cielo, y con su imaginación volaba... muy, muy lejos.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- HOJA 7: CONTRATAPA FINAL (CORREGIDA) -->
+            <div class="hoja" data-hoja="7">
+                <div class="pagina pagina-izquierda pagina-ilustrada" style="background-image: url('Contratapa.png');">
+                    <!-- Esta página solo contiene la imagen de la contratapa -->
+                </div>
+                <!-- Esta página ahora es un contenedor invisible para el botón -->
+                <div class="pagina pagina-derecha pagina-transparente">
+                    <button id="restart-btn" class="restart-btn">
+                        🚀 Volver a Leer
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <button id="next-btn" class="nav-btn">›</button>
+
+    <!-- JavaScript sin cambios -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const libroContainer = document.querySelector('.libro-container');
+            const hojas = document.querySelectorAll('.hoja');
+            let hojaActual = 0;
+
+            function actualizarBotones() {
+                prevBtn.style.display = (hojaActual === 0 || hojaActual === hojas.length - 1) ? 'none' : 'block';
+                nextBtn.style.display = hojaActual === hojas.length - 1 ? 'none' : 'block';
+            }
+
+            function mostrarHoja(indice) {
+                hojas.forEach((hoja, i) => {
+                    hoja.classList.toggle('activa', i === indice);
+                });
+                hojaActual = indice;
+                actualizarBotones();
+            }
+
+            nextBtn.addEventListener('click', () => { if (hojaActual < hojas.length - 1) { mostrarHoja(hojaActual + 1); } });
+            prevBtn.addEventListener('click', () => { if (hojaActual > 0) { mostrarHoja(hojaActual - 1); } });
+            restartBtn.addEventListener('click', () => { mostrarHoja(0); });
+            mostrarHoja(0);
+        });
+    </script>
+</body>
+
+</html>
