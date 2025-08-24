@@ -7,24 +7,33 @@
     <title>Un viaje estelar</title>
     <style>
         :root {
-            /* --font-titulo: 'Lilita One', cursive; */
-            /* --font-titulo: 'Chewy', system-ui; */
             --font-cuerpo: 'Patrick Hand', cursive;
+            --book-width: 95vw;
+            --book-height: 80vh;
+            --color-fondo: #1a2340;
+            --color-paper: #fdf9f3;
+            --color-illustration-bg: #2c3e63;
+            --color-borders: #d1c8b8;
+            --color-accent: #ffd36b;
+            --desktop-breakpoint: 769px;
         }
 
         body {
-            background-color: #1a2340;
+            background-color: var(--color-fondo);
             font-family: var(--font-cuerpo);
             color: #4a3c30;
-            display: grid;
-            place-items: center;
-            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             margin: 0;
             overflow: hidden;
             background-image: radial-gradient(white, rgba(255, 255, 255, .2) 2px, transparent 40px), radial-gradient(white, rgba(255, 255, 255, .15) 1px, transparent 30px), radial-gradient(rgba(255, 215, 0, .3), rgba(255, 215, 0, .05) 2px, transparent 30px);
             background-size: 550px 550px, 350px 350px, 250px 250px;
             background-position: 0 0, 40px 60px, 130px 270px;
             animation: estrellas 200s linear infinite;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         @keyframes estrellas {
@@ -37,91 +46,79 @@
             }
         }
 
+        /* CONTENEDOR PRINCIPAL (CORREGIDO) */
         .libro-container {
             position: relative;
-            perspective: 1500px;
-            transition: transform 0.4s ease;
-        }
-
-        .libro {
-            width: 900px;
-            height: 700px;
-            position: relative;
-            display: flex;
+            width: var(--book-width);
+            height: var(--book-height);
+            max-width: 100%;
+            max-height: 90vh;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            /* Se eliminó background-color de aquí */
+            border-radius: 5px;
         }
 
+        /* DISEÑO PARA MÓVILES (una página) (CORREGIDO) */
         .pagina {
-            width: 450px;
-            height: 700px;
-            background-color: #fdf9f3;
-            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 25px;
             box-sizing: border-box;
-            padding: 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            overflow-y: auto;
+            background-color: var(--color-paper);
+            /* Se añadió el color de fondo base aquí */
         }
 
-        @media (max-width: 920px) {
-            .libro-container {
-                transform: scale(0.65);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .libro-container {
-                transform: scale(0.45);
-            }
-        }
-
-        @media (max-height: 720px) {
-            .libro-container {
-                transform: scale(0.75);
-            }
-        }
-
-        @media (max-width: 920px) and (max-height: 720px) {
-            .libro-container {
-                transform: scale(0.5);
-            }
-        }
-
-        .pagina-izquierda {
-            border-right: 1px solid #d1c8b8;
-            box-shadow: inset 8px 0 15px -5px rgba(0, 0, 0, 0.15);
-        }
-
-        .pagina-derecha {
-            border-left: 1px solid #d1c8b8;
-            box-shadow: inset -8px 0 15px -5px rgba(0, 0, 0, 0.15);
+        .pagina.activa {
+            opacity: 1;
         }
 
         .pagina::after {
             content: attr(data-page);
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 1.2em;
+            font-size: 0.9em;
             color: #bcaaa4;
         }
 
+        /* ESTILOS COMUNES */
         .pagina-ilustrada {
-            background-size: cover;
+            background-color: var(--color-illustration-bg);
+            background-size: contain;
             background-position: center;
-            padding: 50px;
+            background-repeat: no-repeat;
             justify-content: flex-end;
+            padding: 20px;
+        }
+
+        .pagina-ilustrada .parrafo {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            width: 90%;
+            margin: 0 auto;
+            backdrop-filter: blur(2px);
         }
 
         .pagina-ilustrada .parrafo p {
             color: #fdf9f3;
-            text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.9);
-            font-size: 1.8em;
+            text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.9);
             text-align: center;
-            line-height: 1.5;
+            line-height: 1.4;
+            margin: 0.5em 0;
+            font-size: 0.95em;
         }
 
         .pagina-ilustrada .parrafo p:first-of-type::first-letter {
@@ -131,96 +128,75 @@
         .pagina-ilustrada::after {
             color: rgba(255, 255, 255, 0.7);
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-            font-size: 1.2em;
-        }
-
-        h1,
-        h2,
-        .restart-btn {
-            font-family: var(--font-titulo);
-            text-align: center;
         }
 
         .portada {
-            justify-content: space-between;
-            padding-top: 60px;
-            padding-bottom: 60px;
+            justify-content: center;
+            padding: 30px;
+            background-color: #2c3e63;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .portada h1 {
-            font-size: 4em;
+            font-size: 2.2em;
             line-height: 1.1;
-            margin-bottom: 20px;
+            margin: 10px 0;
             color: #ffde7d;
-            -webkit-text-stroke: 2px #c26c1c;
-            text-shadow: 4px 4px 0px #8c4709;
+            -webkit-text-stroke: 1px #c26c1c;
+            text-shadow: 3px 3px 0px #8c4709;
+            text-align: center;
         }
 
         .portada h2 {
-            font-size: 1.8em;
+            font-size: 1.3em;
             font-style: normal;
             font-weight: normal;
             color: #f0f8ff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            margin: 5px 0;
         }
 
         .parrafo p {
-            line-height: 1.6;
-            font-size: 1.5em;
+            line-height: 1.5;
             text-align: left;
-            margin: 1em 0;
+            margin: 0.8em 0;
+            font-size: 1em;
         }
 
         .letra-capital::first-letter {
             font-family: 'Playfair Display', serif;
-            font-size: 4.5em;
+            font-size: 2.8em;
             float: left;
             line-height: 0.8;
-            padding-right: 10px;
-            padding-top: 5px;
-            color: #ffd36b;
-            text-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-        }
-
-        .hoja {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            display: none;
-        }
-
-        .hoja.activa {
-            display: flex;
-        }
-
-        .hoja[data-hoja="0"] .pagina-izquierda {
-            display: none;
-        }
-
-        .hoja[data-hoja="0"] .pagina-derecha {
-            width: 450px;
-            margin-left: 450px;
+            padding-right: 8px;
+            padding-top: 4px;
+            color: var(--color-accent);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .nav-btn {
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-size: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            font-size: 22px;
             cursor: pointer;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             line-height: 10px;
             z-index: 10;
-            text-shadow: 0 0 5px white;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .nav-btn:hover {
@@ -229,42 +205,321 @@
         }
 
         #prev-btn {
-            left: 2vw;
+            left: 10px;
         }
 
         #next-btn {
-            right: 2vw;
+            right: 10px;
         }
 
         .restart-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ffd36b;
+            background: var(--color-accent);
             color: #4a3c30;
-            border-radius: 50px;
-            padding: 15px 30px;
-            font-size: 1.5em;
+            border-radius: 40px;
+            padding: 12px 25px;
+            font-size: 1.1em;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            /* Se elimina el borde para un look más limpio sobre transparente */
             border: none;
+            margin: 20px auto;
+            font-weight: bold;
         }
 
         .restart-btn:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             transform: translateY(-2px);
         }
 
-        /* --- ! NUEVA CLASE PARA PÁGINA TRANSPARENTE ! --- */
-        .pagina-transparente {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
+        .page-indicators {
+            position: fixed;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            z-index: 10;
         }
-        .pagina-transparente::after {
-            content: none !important; /* Oculta el número de página */
+
+        .page-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .page-indicator.active {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.2);
+        }
+
+        /* Áreas táctiles para navegación en móvil */
+        .touch-area {
+            position: fixed;
+            top: 0;
+            width: 20%;
+            height: 100%;
+            z-index: 5;
+        }
+
+        .touch-prev {
+            left: 0;
+        }
+
+        .touch-next {
+            right: 0;
+        }
+
+        /* CLASE PARA PÁGINA TRANSPARENTE */
+        .pagina-transparente {
+            background-color: transparent !important;
+            background-image: none !important;
+        }
+
+        /* CLASE ESPECIAL PARA PÁGINA SIN PADDING */
+        .pagina-no-padding {
+            padding: 0 !important;
+        }
+
+        /* MEDIA QUERIES PARA DIFERENTES DISPOSITIVOS */
+
+        /* Estilos base para móviles (hasta 768px) */
+        /* Los estilos base ya están definidos arriba */
+
+        /* Estilos para tablets (769px a 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .libro-container {
+                width: 90vw;
+                height: 85vh;
+            }
+
+            .pagina {
+                padding: 30px;
+            }
+
+            .pagina-no-padding {
+                padding: 0 !important;
+            }
+
+            .portada h1 {
+                font-size: 2.8em;
+            }
+
+            .portada h2 {
+                font-size: 1.5em;
+            }
+
+            .parrafo p {
+                font-size: 1.15em;
+            }
+
+            .pagina-ilustrada .parrafo p {
+                font-size: 1.05em;
+            }
+
+            .letra-capital::first-letter {
+                font-size: 3.2em;
+            }
+
+            .nav-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 23px;
+            }
+
+            /* Estructura de libro para tablets */
+            .libro-container {
+                perspective: 1200px;
+            }
+
+            .libro {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                display: flex;
+            }
+
+            .hoja {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                display: none;
+                flex-direction: row;
+            }
+
+            .hoja.activa {
+                display: flex;
+            }
+
+            .pagina {
+                position: relative;
+                width: 50%;
+                height: 100%;
+                opacity: 1;
+                padding: 35px;
+            }
+
+            .pagina-no-padding {
+                padding: 0 !important;
+            }
+
+            .pagina-izquierda {
+                border-right: 1px solid var(--color-borders);
+                box-shadow: inset 8px 0 15px -5px rgba(0, 0, 0, 0.15);
+            }
+
+            .pagina-derecha {
+                border-left: 1px solid var(--color-borders);
+                box-shadow: inset -8px 0 15px -5px rgba(0, 0, 0, 0.15);
+            }
+
+            /* CORRECCIÓN: Mostrar la página izquierda de la primera hoja */
+            .hoja[data-hoja="0"] .pagina-izquierda {
+                display: flex;
+                width: 50%;
+            }
+
+            .hoja[data-hoja="0"] .pagina-derecha {
+                width: 50%;
+                margin-left: 0;
+            }
+
+            /* Ocultar páginas individuales en tablets */
+            .pagina:not(.pagina-izquierda):not(.pagina-derecha) {
+                display: none;
+            }
+
+            /* Mostrar estructura de hojas en tablets */
+            .hoja {
+                display: none;
+            }
+
+            .hoja.activa {
+                display: flex;
+            }
+
+            /* Ocultar elementos móviles en tablets */
+            .page-indicators,
+            .touch-area {
+                display: none;
+            }
+        }
+
+        /* Estilos para desktop (1025px en adelante) */
+        @media (min-width: 1025px) {
+            .libro-container {
+                width: 900px;
+                height: 700px;
+                perspective: 1500px;
+            }
+
+            .libro {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                display: flex;
+            }
+
+            .hoja {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                display: none;
+                flex-direction: row;
+            }
+
+            .hoja.activa {
+                display: flex;
+            }
+
+            .pagina {
+                position: relative;
+                width: 450px;
+                height: 100%;
+                opacity: 1;
+                padding: 40px;
+            }
+
+            .pagina-no-padding {
+                padding: 0 !important;
+            }
+
+            .pagina-izquierda {
+                border-right: 1px solid var(--color-borders);
+                box-shadow: inset 8px 0 15px -5px rgba(0, 0, 0, 0.15);
+            }
+
+            .pagina-derecha {
+                border-left: 1px solid var(--color-borders);
+                box-shadow: inset -8px 0 15px -5px rgba(0, 0, 0, 0.15);
+            }
+
+            /* CORRECCIÓN: Mostrar la página izquierda de la primera hoja */
+            .hoja[data-hoja="0"] .pagina-izquierda {
+                display: flex;
+                width: 450px;
+            }
+
+            .hoja[data-hoja="0"] .pagina-derecha {
+                width: 450px;
+                margin-left: 0;
+            }
+
+            /* Ocultar páginas individuales en desktop */
+            .pagina:not(.pagina-izquierda):not(.pagina-derecha) {
+                display: none;
+            }
+
+            /* Mostrar estructura de hojas en desktop */
+            .hoja {
+                display: none;
+            }
+
+            .hoja.activa {
+                display: flex;
+            }
+
+            .portada h1 {
+                font-size: 4em;
+                -webkit-text-stroke: 2px #c26c1c;
+            }
+
+            .portada h2 {
+                font-size: 1.8em;
+            }
+
+            .parrafo p {
+                font-size: 1.5em;
+            }
+
+            .pagina-ilustrada .parrafo p {
+                font-size: 1.3em;
+            }
+
+            .letra-capital::first-letter {
+                font-size: 4.5em;
+            }
+
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+
+            /* Ocultar elementos móviles en desktop */
+            .page-indicators,
+            .touch-area {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -272,21 +527,102 @@
 <body>
     <button id="prev-btn" class="nav-btn">‹</button>
     <div class="libro-container">
+        <!-- ESTRUCTURA PARA MÓVILES (páginas individuales) -->
+        <div class="pagina activa portada" data-page="1" style="background-image: url('Tapa.png');">
+        </div>
+        <div class="pagina" data-page="2">
+            <div class="parrafo">
+                <p class="letra-capital">Había una vez, en un bosque suave como el algodón, un conejito marrón llamado
+                    Lumi.
+                    Tenía
+                    ojos brillantes, orejitas largas y un suéter amarillo que le daba calorcito y mucha
+                    valentía.</p>
+                <p>Por las noches, cuando todo se quedaba en silencio, Lumi veía cómo las estrellas parpadeaban,
+                    una por una.</p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="3" style="background-image: url('Escena_1.png');">
+            <div class="parrafo">
+                <p>—¿Qué se sentirá estar allá arriba? —preguntaba Lumi, con voz suave.</p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="4" style="background-image: url('Escena_2.png');">
+            <div class="parrafo">
+                <p>Una pequeña ardilla, con una nuez en la mano, se acercó una noche.</p>
+                <p>— ¿Por qué miras tanto el cielo, Lumi?</p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="5" style="background-image: url('Escena_3.png');">
+            <div class="parrafo">
+                <p>— Porque quiero ser... ¡astronauta! —dijo él, con una sonrisa grande.</p>
+            </div>
+        </div>
+        <div class="pagina" data-page="6">
+            <div class="parrafo">
+                <p class="letra-capital">¿Astronauta? —rió la ardilla— ¡Pero no hay cohetes en el bosque!</p>
+                <p>—No importa —dijo Lumi—. Construiré uno.</p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="7" style="background-image: url('Escena_4.png');">
+            <div class="parrafo">
+                <p>Entonces, con ramitas, hojas y una zanahoria, construyó su cohete.</p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="8" style="background-image: url('Escena_5.png');">
+            <div class="parrafo">
+                <p>Y aunque sus patitas no dejaron el suelo, Lumi cerró los ojos... y voló en su sueño.</p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="9" style="background-image: url('Escena_6.png');">
+            <div class="parrafo">
+                <p>Voló entre estrellas brillantes y saludó a la Luna, que lo miraba con una hermosa sonrisa.</p>
+            </div>
+        </div>
+        <div class="pagina" data-page="10">
+            <div class="parrafo">
+                <p class="letra-capital">Cuando comenzó a hacerse de día, Lumi comenzó a despertarse.</p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="11" style="background-image: url('Escena_7.png');">
+            <div class="parrafo">
+                <p>—Hoy no volé de verdad —dijo Lumi—. Pero en mis sueños, sí.</p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="12" style="background-image: url('Escena_8.png');">
+            <div class="parrafo">
+                <p>Y la ardilla, ahora con los ojos brillantes, susurró:</p>
+                <p>—Tal vez... yo también pueda soñar con volar.</p>
+            </div>
+        </div>
+        <div class="pagina" data-page="13">
+            <div class="parrafo">
+                <p class="letra-capital">Y así, cada noche, Lumi miraba al cielo, y con su imaginación volaba... muy,
+                    muy lejos.
+                </p>
+            </div>
+        </div>
+        <div class="pagina pagina-ilustrada" data-page="14" style="background-image: url('Contratapa.png');">
+            <button id="restart-btn" class="restart-btn">
+                🚀 Volver a Leer
+            </button>
+        </div>
+        <!-- ESTRUCTURA PARA ESCRITORIO (hojas con dos páginas) -->
         <div class="libro">
-
             <!-- HOJA 0: Portada -->
-            <div class="hoja activa" data-hoja="0">
-                <div class="pagina pagina-izquierda"></div>
+            <div class="hoja" data-hoja="0">
+                <div class="pagina pagina-izquierda pagina-no-padding pagina-transparente">
+                </div>
                 <div class="pagina pagina-derecha portada pagina-ilustrada" data-page="1"
                     style="background-image: url('Tapa.png');">
                 </div>
             </div>
-
             <!-- HOJA 1: Páginas 2 y 3 -->
             <div class="hoja" data-hoja="1">
                 <div class="pagina pagina-izquierda" data-page="2">
                     <div class="parrafo">
-                        <p class="letra-capital">Había una vez, en un bosque suave como el algodón, un conejito marrón llamado Lumi. Tenía
+                        <p class="letra-capital">Había una vez, en un bosque suave como el algodón, un conejito marrón
+                            llamado Lumi.
+                            Tenía
                             ojos brillantes, orejitas largas y un suéter amarillo que le daba calorcito y mucha
                             valentía.</p>
                         <p>Por las noches, cuando todo se quedaba en silencio, Lumi veía cómo las estrellas parpadeaban,
@@ -295,7 +631,7 @@
                 </div>
                 <div class="pagina pagina-derecha pagina-ilustrada" data-page="3"
                     style="background-image: url('Escena_1.png');">
-                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                    <div class="parrafo">
                         <p>—¿Qué se sentirá estar allá arriba? —preguntaba Lumi, con voz suave.</p>
                     </div>
                 </div>
@@ -304,14 +640,14 @@
             <div class="hoja" data-hoja="2">
                 <div class="pagina pagina-izquierda pagina-ilustrada" data-page="4"
                     style="background-image: url('Escena_2.png');">
-                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                    <div class="parrafo">
                         <p>Una pequeña ardilla, con una nuez en la mano, se acercó una noche.</p>
                         <p>— ¿Por qué miras tanto el cielo, Lumi?</p>
                     </div>
                 </div>
                 <div class="pagina pagina-derecha pagina-ilustrada" data-page="5"
                     style="background-image: url('Escena_3.png');">
-                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                    <div class="parrafo">
                         <p>— Porque quiero ser... ¡astronauta! —dijo él, con una sonrisa grande.</p>
                     </div>
                 </div>
@@ -326,7 +662,7 @@
                 </div>
                 <div class="pagina pagina-derecha pagina-ilustrada" data-page="7"
                     style="background-image: url('Escena_4.png');">
-                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                    <div class="parrafo">
                         <p>Entonces, con ramitas, hojas y una zanahoria, construyó su cohete.</p>
                     </div>
                 </div>
@@ -335,13 +671,13 @@
             <div class="hoja" data-hoja="4">
                 <div class="pagina pagina-izquierda pagina-ilustrada" data-page="8"
                     style="background-image: url('Escena_5.png');">
-                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                    <div class="parrafo">
                         <p>Y aunque sus patitas no dejaron el suelo, Lumi cerró los ojos... y voló en su sueño.</p>
                     </div>
                 </div>
                 <div class="pagina pagina-derecha pagina-ilustrada" data-page="9"
                     style="background-image: url('Escena_6.png');">
-                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                    <div class="parrafo">
                         <p>Voló entre estrellas brillantes y saludó a la Luna, que lo miraba con una hermosa sonrisa.
                         </p>
                     </div>
@@ -356,7 +692,7 @@
                 </div>
                 <div class="pagina pagina-derecha pagina-ilustrada" data-page="11"
                     style="background-image: url('Escena_7.png');">
-                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                    <div class="parrafo">
                         <p>—Hoy no volé de verdad —dijo Lumi—. Pero en mis sueños, sí.</p>
                     </div>
                 </div>
@@ -365,48 +701,100 @@
             <div class="hoja" data-hoja="6">
                 <div class="pagina pagina-izquierda pagina-ilustrada" data-page="12"
                     style="background-image: url('Escena_8.png');">
-                    <div class="parrafo" style="background: rgba(0,0,0,0.2); border-radius: 15px; padding: 10px;">
+                    <div class="parrafo">
                         <p>Y la ardilla, ahora con los ojos brillantes, susurró:</p>
                         <p>—Tal vez... yo también pueda soñar con volar.</p>
                     </div>
                 </div>
                 <div class="pagina pagina-derecha" data-page="13">
                     <div class="parrafo">
-                        <p class="letra-capital">Y así, cada noche, Lumi miraba al cielo, y con su imaginación volaba... muy, muy lejos.</p>
+                        <p class="letra-capital">Y así, cada noche, Lumi miraba al cielo, y con su imaginación volaba...
+                            muy, muy
+                            lejos.</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- HOJA 7: CONTRATAPA FINAL (CORREGIDA) -->
+            <!-- HOJA 7: Contratapa -->
             <div class="hoja" data-hoja="7">
-                <div class="pagina pagina-izquierda pagina-ilustrada" style="background-image: url('Contratapa.png');">
-                    <!-- Esta página solo contiene la imagen de la contratapa -->
+                <div class="pagina pagina-izquierda pagina-ilustrada" data-page="14"
+                    style="background-image: url('Contratapa.png');">
                 </div>
-                <!-- Esta página ahora es un contenedor invisible para el botón -->
-                <div class="pagina pagina-derecha pagina-transparente">
-                    <button id="restart-btn" class="restart-btn">
+                <div class="pagina pagina-derecha pagina-transparente pagina-no-padding">
+                    <button id="restart-btn-desktop" class="restart-btn">
                         🚀 Volver a Leer
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
     <button id="next-btn" class="nav-btn">›</button>
-
-    <!-- JavaScript sin cambios -->
+    <!-- Áreas táctiles para navegación en móvil -->
+    <div class="touch-area touch-prev" id="touch-prev"></div>
+    <div class="touch-area touch-next" id="touch-next"></div>
+    <!-- Indicadores de página -->
+    <div class="page-indicators">
+        <div class="page-indicator active" data-page="0"></div>
+        <div class="page-indicator" data-page="1"></div>
+        <div class="page-indicator" data-page="2"></div>
+        <div class="page-indicator" data-page="3"></div>
+        <div class="page-indicator" data-page="4"></div>
+        <div class="page-indicator" data-page="5"></div>
+        <div class="page-indicator" data-page="6"></div>
+        <div class="page-indicator" data-page="7"></div>
+        <div class="page-indicator" data-page="8"></div>
+        <div class="page-indicator" data-page="9"></div>
+        <div class="page-indicator" data-page="10"></div>
+        <div class="page-indicator" data-page="11"></div>
+        <div class="page-indicator" data-page="12"></div>
+        <div class="page-indicator" data-page="13"></div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const restartBtn = document.getElementById('restart-btn');
-            const libroContainer = document.querySelector('.libro-container');
+            const restartBtnDesktop = document.getElementById('restart-btn-desktop');
+            const touchPrev = document.getElementById('touch-prev');
+            const touchNext = document.getElementById('touch-next');
+
+            // Detectar tipo de dispositivo
+            const isMobile = window.innerWidth <= 768;
+            const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+            const isDesktop = window.innerWidth > 1024;
+
+            // Elementos para móviles
+            const paginas = document.querySelectorAll('.pagina:not(.pagina-izquierda):not(.pagina-derecha)');
+            const pageIndicators = document.querySelectorAll('.page-indicator');
+            // Elementos para desktop y tablets
             const hojas = document.querySelectorAll('.hoja');
+
+            let paginaActual = 0;
             let hojaActual = 0;
 
-            function actualizarBotones() {
-                prevBtn.style.display = (hojaActual === 0 || hojaActual === hojas.length - 1) ? 'none' : 'block';
-                nextBtn.style.display = hojaActual === hojas.length - 1 ? 'none' : 'block';
+            function actualizarNavegacion() {
+                if (isMobile) {
+                    // Navegación para móviles
+                    prevBtn.style.display = paginaActual === 0 ? 'none' : 'flex';
+                    nextBtn.style.display = paginaActual === paginas.length - 1 ? 'none' : 'flex';
+                    // Actualizar indicadores de página
+                    pageIndicators.forEach((indicator, index) => {
+                        indicator.classList.toggle('active', index === paginaActual);
+                    });
+                } else {
+                    // Navegación para tablets y desktop
+                    prevBtn.style.display = hojaActual === 0 ? 'none' : 'flex';
+                    nextBtn.style.display = hojaActual === hojas.length - 1 ? 'none' : 'flex';
+                }
+            }
+
+            function mostrarPagina(indice) {
+                paginas.forEach((pagina, i) => {
+                    pagina.classList.toggle('activa', i === indice);
+                });
+                paginaActual = indice;
+                actualizarNavegacion();
+                // Scroll suave hacia arriba al cambiar de página
+                document.querySelector('.libro-container').scrollTop = 0;
             }
 
             function mostrarHoja(indice) {
@@ -414,13 +802,129 @@
                     hoja.classList.toggle('activa', i === indice);
                 });
                 hojaActual = indice;
-                actualizarBotones();
+                actualizarNavegacion();
             }
 
-            nextBtn.addEventListener('click', () => { if (hojaActual < hojas.length - 1) { mostrarHoja(hojaActual + 1); } });
-            prevBtn.addEventListener('click', () => { if (hojaActual > 0) { mostrarHoja(hojaActual - 1); } });
-            restartBtn.addEventListener('click', () => { mostrarHoja(0); });
-            mostrarHoja(0);
+            // Navegación con botones
+            nextBtn.addEventListener('click', () => {
+                if (isMobile) {
+                    if (paginaActual < paginas.length - 1) {
+                        mostrarPagina(paginaActual + 1);
+                    }
+                } else {
+                    if (hojaActual < hojas.length - 1) {
+                        mostrarHoja(hojaActual + 1);
+                    }
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (isMobile) {
+                    if (paginaActual > 0) {
+                        mostrarPagina(paginaActual - 1);
+                    }
+                } else {
+                    if (hojaActual > 0) {
+                        mostrarHoja(hojaActual - 1);
+                    }
+                }
+            });
+
+            // Navegación táctil para móviles
+            if (isMobile) {
+                touchNext.addEventListener('click', () => {
+                    if (paginaActual < paginas.length - 1) {
+                        mostrarPagina(paginaActual + 1);
+                    }
+                });
+
+                touchPrev.addEventListener('click', () => {
+                    if (paginaActual > 0) {
+                        mostrarPagina(paginaActual - 1);
+                    }
+                });
+
+                // Navegación por deslizamiento en móviles
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                document.addEventListener('touchstart', e => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, false);
+
+                document.addEventListener('touchend', e => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, false);
+
+                function handleSwipe() {
+                    const minSwipeDistance = 50;
+                    if (touchEndX < touchStartX && touchStartX - touchEndX > minSwipeDistance) {
+                        // Deslizamiento hacia la izquierda (siguiente página)
+                        if (paginaActual < paginas.length - 1) {
+                            mostrarPagina(paginaActual + 1);
+                        }
+                    }
+                    if (touchEndX > touchStartX && touchEndX - touchStartX > minSwipeDistance) {
+                        // Deslizamiento hacia la derecha (página anterior)
+                        if (paginaActual > 0) {
+                            mostrarPagina(paginaActual - 1);
+                        }
+                    }
+                }
+            }
+
+            // Teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    if (isMobile && paginaActual < paginas.length - 1) {
+                        mostrarPagina(paginaActual + 1);
+                    } else if (!isMobile && hojaActual < hojas.length - 1) {
+                        mostrarHoja(hojaActual + 1);
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    if (isMobile && paginaActual > 0) {
+                        mostrarPagina(paginaActual - 1);
+                    } else if (!isMobile && hojaActual > 0) {
+                        mostrarHoja(hojaActual - 1);
+                    }
+                }
+            });
+
+            // Botones de reinicio
+            if (restartBtn) {
+                restartBtn.addEventListener('click', () => {
+                    if (isMobile) {
+                        mostrarPagina(0);
+                    } else {
+                        mostrarHoja(0);
+                    }
+                });
+            }
+
+            if (restartBtnDesktop) {
+                restartBtnDesktop.addEventListener('click', () => {
+                    mostrarHoja(0);
+                });
+            }
+
+            // Inicializar
+            if (isMobile) {
+                mostrarPagina(0);
+                // Ocultar estructura desktop/tablet
+                document.querySelector('.libro').style.display = 'none';
+            } else {
+                mostrarHoja(0);
+                // Ocultar estructura móvil
+                paginas.forEach(pagina => {
+                    pagina.style.display = 'none';
+                });
+            }
+
+            // Actualizar en redimensionamiento
+            window.addEventListener('resize', () => {
+                location.reload();
+            });
         });
     </script>
 </body>
